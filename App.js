@@ -9,6 +9,9 @@ export default function App() {
   const [answerValue, setAnswerValue] = useState(0);
   const [readyToPlace, setreadyToPlace] = useState(true);
 
+  const [memoryValue, setmemoryValue] = useState(0);
+  const [operatorValue, setoperatorValue] = useState(0);
+
 
   const handleNumber = (value) => 
   {
@@ -29,6 +32,13 @@ export default function App() {
     {
       setreadyToPlace(false);
       setAnswerValue(handleNumber(value));
+    }
+    else if (value = 'C') 
+    {
+      setAnswerValue(0);
+      setmemoryValue(0);
+      setoperatorValue(0);
+      setreadyToPlace(true);      
     }
   };
 
