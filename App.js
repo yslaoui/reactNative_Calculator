@@ -7,7 +7,32 @@ const screenWidth = Dimensions.get('window').width;
 export default function App() {
 
   const [answerValue, setAnswerValue] = useState(0);
-  const buttonPressed = (value) => alert(`Hi ${value}`);
+  const [readyToPlace, setreadyToPlace] = useState(true);
+
+
+  const handleNumber = (value) => 
+  {
+    if (readyToPlace) 
+    {
+      return value;
+    }
+    else 
+    {
+      return String(answerValue) + String(value);
+    }
+    
+  };
+
+  const buttonPressed = (value) => 
+  {
+    if (typeof value == 'number') 
+    {
+      setreadyToPlace(false);
+      setAnswerValue(handleNumber(value));
+    }
+  };
+
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -30,13 +55,13 @@ export default function App() {
         </View>
 
         <View style={styles.row}>
-          <TouchableOpacity onPress={()=>buttonPressed(('7'))} style={styles.button}>
+          <TouchableOpacity onPress={()=>buttonPressed((7))} style={styles.button}>
             <Text style={styles.action}> 7 </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>buttonPressed(('8'))} style={styles.button}>
+          <TouchableOpacity onPress={()=>buttonPressed((8))} style={styles.button}>
             <Text style={styles.action}> 8 </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>buttonPressed(('9'))} style={styles.button}>
+          <TouchableOpacity onPress={()=>buttonPressed((9))} style={styles.button}>
             <Text style={styles.action}> 9 </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>buttonPressed(('x'))} style={[styles.button, styles.siderow]}>
@@ -45,13 +70,13 @@ export default function App() {
         </View>
 
         <View style={styles.row}>
-          <TouchableOpacity onPress={()=>buttonPressed(('4'))} style={styles.button}>
+          <TouchableOpacity onPress={()=>buttonPressed((4))} style={styles.button}>
             <Text style={styles.action}> 4 </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>buttonPressed(('5'))} style={styles.button}>
+          <TouchableOpacity onPress={()=>buttonPressed((5))} style={styles.button}>
             <Text style={styles.action}> 5 </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>buttonPressed(('6'))} style={styles.button}>
+          <TouchableOpacity onPress={()=>buttonPressed((6))} style={styles.button}>
             <Text style={styles.action}> 6 </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>buttonPressed(('-'))} style={[styles.button, styles.siderow]}>
@@ -60,13 +85,13 @@ export default function App() {
         </View>
 
         <View style={styles.row}>
-          <TouchableOpacity onPress={()=>buttonPressed(('1'))} style={styles.button}>
+          <TouchableOpacity onPress={()=>buttonPressed((1))} style={styles.button}>
             <Text style={styles.action}> 1 </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>buttonPressed(('2'))} style={styles.button}>
+          <TouchableOpacity onPress={()=>buttonPressed((2))} style={styles.button}>
             <Text style={styles.action}> 2 </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>buttonPressed(('3'))} style={styles.button}>
+          <TouchableOpacity onPress={()=>buttonPressed((3))} style={styles.button}>
             <Text style={styles.action}> 3 </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>buttonPressed(('+'))} style={[styles.button, styles.siderow]}>
@@ -75,7 +100,7 @@ export default function App() {
         </View>
 
         <View style={styles.row}>
-          <TouchableOpacity onPress={()=>buttonPressed(('0'))} style={[styles.button, {width: screenWidth/2.25}]}>
+          <TouchableOpacity onPress={()=>buttonPressed((0))} style={[styles.button, {width: screenWidth/2.25}]}>
             <Text style={styles.action}> 0 </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>buttonPressed(('.'))} style={styles.button}>
