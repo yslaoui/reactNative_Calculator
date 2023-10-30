@@ -13,6 +13,31 @@ export default function App() {
   const [operatorValue, setoperatorValue] = useState(0);
 
 
+  const calculateEquals = () => 
+  {
+        let previous = parseFloat(memoryValue);
+        let current = parseFloat(answerValue);
+        console.log(`previous is ${previous}`);
+        console.log(`current is ${current}`);
+        switch(operatorValue) 
+        {
+          case '/' : 
+            setAnswerValue(previous / current);
+            break;
+          case 'x' : 
+            setAnswerValue(previous * current);
+            break;
+          case '-' : 
+            setAnswerValue(previous - current);
+            break;
+          case '+' : 
+            setAnswerValue(previous + current);
+            break;
+          default: return;
+        }  
+        console.log(`inside calculateEquals answeValue is ${answerValue}`)      
+  }
+  
   const handleNumber = (value) => 
   {
     if (readyToPlace) 
@@ -28,18 +53,41 @@ export default function App() {
 
   const buttonPressed = (value) => 
   {
+    console.log(`********`);    
     if (typeof value == 'number') 
     {
-      setreadyToPlace(false);
       setAnswerValue(handleNumber(value));
+      setreadyToPlace(false);
+
     }
-    else if (value = 'C') 
+    if (value == 'C') 
     {
       setAnswerValue(0);
       setmemoryValue(0);
       setoperatorValue(0);
       setreadyToPlace(true);      
     }
+    if (value == '/' || value == 'x' || value == '-' || value == '+') // button value is an operator /, x, -, + 
+    {
+      setmemoryValue(answerValue);  // keeps the result value in memory. it will be erased since we set ready to relace to true in the netx line
+      setreadyToPlace(true);
+      setoperatorValue(value); // store the operator: /, x, -, +, =, .
+    }
+    if (value == '=') 
+    {
+      console.log(` = was pressed`);
+      calculateEquals();
+      setmemoryValue(0);
+      setreadyToPlace(true); 
+    }
+
+    console.log(` value is ${value}`)
+    console.log(`readyToPlace is ${readyToPlace}`);
+    console.log(`answerValue is ${answerValue}`);
+    console.log(`memoryValue is ${memoryValue}`);
+    console.log(`operatorValue is ${operatorValue}`);
+
+
   };
 
 
