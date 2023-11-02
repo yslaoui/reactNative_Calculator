@@ -1,40 +1,53 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Dimensions, SafeAreaView, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 const screenWidth = Dimensions.get('window').width;
 
 
 export default function App() {
 
-  const [answerValue, setAnswerValue] = useState(0);
-  const [readyToPlace, setreadyToPlace] = useState(true);
+  const [answerValue, setAnswerValue] = useState(0); // What is shown on the screen 
+  const [readyToPlace, setreadyToPlace] = useState(true); // if true number replaces the old one. If false gets concatenated to the old one.
 
-  const [memoryValue, setmemoryValue] = useState(0);
-  const [operatorValue, setoperatorValue] = useState(0);
+  const [memoryValue, setmemoryValue] = useState(0); // in a*b it is a, ie the first element in an operation
+  const [operatorValue, setoperatorValue] = useState(0); // it is x, - ....
+  
+  // useEffect trigerred a re-render of the page and printout of the values whenever the values listed are changed
+  // using console.log without useEffect does not work because the console.log will print the value before useState is finished changing the vakue of the state variable
+  // beause useState() is asynchronous
+  useEffect(() => {
+    console.log(`answerValue is ${answerValue}`);
+    console.log(`memoryValue is ${memoryValue}`);
+    console.log(`operatorValue is ${operatorValue}`);
+    console.log(`readyToPlace is ${readyToPlace}`);
+  }, [readyToPlace, answerValue, memoryValue, operatorValue]); // This will run when any of the listed variables change.
 
 
   const calculateEquals = () => 
   {
         let previous = parseFloat(memoryValue);
-        let current = parseFloat(answerValue);
+        let current =  parseFloat(answerValue);
+        let result = 0;
         console.log(`previous is ${previous}`);
         console.log(`current is ${current}`);
         switch(operatorValue) 
         {
-          case '/' : 
-            setAnswerValue(previous / current);
-            break;
+          case '/' :
+            result = previous / current;
+            break; // break is important oherwise the rest of the cases are executed
           case 'x' : 
-            setAnswerValue(previous * current);
+            result = previous * current;
             break;
           case '-' : 
-            setAnswerValue(previous - current);
+            result = previous - current;
             break;
           case '+' : 
-            setAnswerValue(previous + current);
+            result = previous + current;
             break;
-          default: return;
+          default: return result;
         }  
+        return result;
+        // If I set the state here the old result would be returned because state is asynchronous
         console.log(`inside calculateEquals answeValue is ${answerValue}`)      
   }
   
@@ -69,25 +82,31 @@ export default function App() {
     }
     if (value == '/' || value == 'x' || value == '-' || value == '+') // button value is an operator /, x, -, + 
     {
-      setmemoryValue(answerValue);  // keeps the result value in memory. it will be erased since we set ready to relace to true in the netx line
       setreadyToPlace(true);
-      setoperatorValue(value); // store the operator: /, x, -, +, =, .
+      if (operatorValue == 0) 
+      {
+        setmemoryValue(answerValue);  // keeps the result value in memory. it will be erased since we set ready to relace to true in the netx line
+        setoperatorValue(value);
+      }
+      else 
+      {
+        let interMediaryValue =  calculateEquals();
+        setmemoryValue(interMediaryValue);
+        setoperatorValue(value);
+        console.log(`The intermediate value is  ${interMediaryValue}`);
+      }
+      
+
     }
     if (value == '=') 
     {
       console.log(` = was pressed`);
-      calculateEquals();
+      let result = calculateEquals();
+      setAnswerValue(result);
       setmemoryValue(0);
       setreadyToPlace(true); 
     }
-
-    console.log(` value is ${value}`)
-    console.log(`readyToPlace is ${readyToPlace}`);
-    console.log(`answerValue is ${answerValue}`);
-    console.log(`memoryValue is ${memoryValue}`);
-    console.log(`operatorValue is ${operatorValue}`);
-
-
+    
   };
 
 
