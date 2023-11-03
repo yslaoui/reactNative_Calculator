@@ -106,6 +106,16 @@ export default function App() {
       setmemoryValue(0);
       setreadyToPlace(true); 
     }
+
+    if (value == '+/-') 
+    {
+      setAnswerValue(-answerValue);
+    }
+    
+    if (value == '%') 
+    {
+      setAnswerValue(answerValue * 0.01);
+    }
     
   };
 
