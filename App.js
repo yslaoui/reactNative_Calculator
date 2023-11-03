@@ -73,13 +73,50 @@ export default function App() {
       setreadyToPlace(false);
 
     }
-    if (value == 'C') 
+
+    if (value == 'AC') 
     {
       setAnswerValue(0);
       setmemoryValue(0);
       setoperatorValue(0);
       setreadyToPlace(true);      
     }
+
+    /*
+    // no operation was started
+    if operatorValue == 0:
+       if len(answerValue) == 1:
+        setAnswerValue(0)
+       if len(answervalue) > 1:
+        let answerValueString = string(answerValue)
+        remove the last element of the string 
+        Update the answer value
+    // one operation was started, but not chained
+    else 
+      setMeemoryValue(0)
+      setOperatorValue(0)
+      setReadytoPlace(true)
+    */
+
+    if (value == 'C') 
+    {
+      let answerValueString = String(answerValue);
+      if (operatorValue == 0) 
+      {
+        if (answerValueString.length == 1) 
+        {
+          setAnswerValue(0);
+          setreadyToPlace(true);
+        } 
+        if (answerValueString.length > 1) 
+        {
+          answerValueString = answerValueString.slice(0,-1);
+          console.log(`answerValuestring is ${answerValueString}`);
+          setAnswerValue(parseFloat(answerValueString));
+        }
+      }
+    }
+
     if (value == '/' || value == 'x' || value == '-' || value == '+') // button value is an operator /, x, -, + 
     {
       setreadyToPlace(true);
@@ -187,7 +224,10 @@ export default function App() {
         </View>
 
         <View style={styles.row}>
-          <TouchableOpacity onPress={()=>buttonPressed((0))} style={[styles.button, {width: screenWidth/2.25}]}>
+        <TouchableOpacity onPress={()=>buttonPressed(('AC'))} style={[styles.button, styles.toprow]}>
+            <Text style={styles.toprowtext}> AC </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>buttonPressed((0))} style={styles.button}>
             <Text style={styles.action}> 0 </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>buttonPressed(('.'))} style={styles.button}>
@@ -197,8 +237,6 @@ export default function App() {
             <Text style={styles.action}> = </Text>
           </TouchableOpacity>
         </View>
-
-
       </View>
       </SafeAreaView>
   );
