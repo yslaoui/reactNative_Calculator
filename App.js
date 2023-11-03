@@ -8,10 +8,10 @@ export default function App() {
 
   const [answerValue, setAnswerValue] = useState(0); // What is shown on the screen 
   const [readyToPlace, setreadyToPlace] = useState(true); // if true number replaces the old one. If false gets concatenated to the old one.
-
   const [memoryValue, setmemoryValue] = useState(0); // in a*b it is a, ie the first element in an operation
   const [operatorValue, setoperatorValue] = useState(0); // it is x, - ....
-  
+  const [operatorList, setOperatorList] = useState([]);
+
   // useEffect trigerred a re-render of the page and printout of the values whenever the values listed are changed
   // using console.log without useEffect does not work because the console.log will print the value before useState is finished changing the vakue of the state variable
   // beause useState() is asynchronous
@@ -20,6 +20,7 @@ export default function App() {
     console.log(`memoryValue is ${memoryValue}`);
     console.log(`operatorValue is ${operatorValue}`);
     console.log(`readyToPlace is ${readyToPlace}`);
+    console.log(`operatorList is ${operatorList}`);
   }, [readyToPlace, answerValue, memoryValue, operatorValue]); // This will run when any of the listed variables change.
 
 
@@ -79,7 +80,8 @@ export default function App() {
       setAnswerValue(0);
       setmemoryValue(0);
       setoperatorValue(0);
-      setreadyToPlace(true);      
+      setreadyToPlace(true);  
+      setOperatorList([]);    
     }
 
     /*
@@ -92,34 +94,39 @@ export default function App() {
         remove the last element of the string 
         Update the answer value
     // one operation was started, but not chained
-    else 
-      setMeemoryValue(0)
-      setOperatorValue(0)
-      setReadytoPlace(true)
-    */
+    else
+      if readyToplace is true // means that the last clicked button was an operator
+        setMemoryValue(0);
+        setOperatorValue(0);
+        setReadyToPlace(false)
+        operator list: remove the last operator        
+      else // means 7 x 9 ie we pressed a button after the x
+        setReadytoPlace(true)
+        setanswer value to the memory value
+
+        */
+
 
     if (value == 'C') 
     {
       let answerValueString = String(answerValue);
-      if (operatorValue == 0) 
+      if (answerValueString.length == 1) 
       {
-        if (answerValueString.length == 1) 
-        {
-          setAnswerValue(0);
-          setreadyToPlace(true);
-        } 
-        if (answerValueString.length > 1) 
-        {
-          answerValueString = answerValueString.slice(0,-1);
-          console.log(`answerValuestring is ${answerValueString}`);
-          setAnswerValue(parseFloat(answerValueString));
-        }
+        setAnswerValue(0);
+        setreadyToPlace(true);
+      } 
+      if (answerValueString.length > 1) 
+      {
+        answerValueString = answerValueString.slice(0,-1);
+        console.log(`answerValuestring is ${answerValueString}`);
+        setAnswerValue(parseFloat(answerValueString));
       }
     }
 
     if (value == '/' || value == 'x' || value == '-' || value == '+') // button value is an operator /, x, -, + 
     {
       setreadyToPlace(true);
+      setOperatorList(myArray => myArray.concat(value));
       if (operatorValue == 0) 
       {
         setmemoryValue(answerValue);  // keeps the result value in memory. it will be erased since we set ready to relace to true in the netx line
