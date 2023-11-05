@@ -23,42 +23,42 @@ const CalculationComponent =  (props) =>
   if (operatorList.length == 0 && readyToPlace == false  && pressedEqual == false)
   {
     return (
-      <Text style={styles.result}>{`${answerValue}`}</Text>
+      <Text style={styles.calculation}>{`${answerValue}`}</Text>
     );
   }
   // 7 x
   else if (operatorList.length == 1 &&  readyToPlace == true && pressedEqual == false) 
   {
     return (
-      <Text style={styles.result}>{`${answerValue} ${operatorValue}`}</Text>
+      <Text style={styles.calculation}>{`${answerValue} ${operatorValue}`}</Text>
     );
   }
   // 7 x 2
   else if (operatorList.length == 1  && readyToPlace == false && pressedEqual == false) 
   {
     return (
-      <Text style={styles.result}>{`${memoryValue} ${operatorValue} ${answerValue}`}</Text>
+      <Text style={styles.calculation}>{`${memoryValue} ${operatorValue} ${answerValue}`}</Text>
     );
   }
   // 7 x 2 = 
   else if (operatorList.length == 1  && readyToPlace == true && pressedEqual == true) 
   {
     return (
-      <Text style={styles.result}>{`${buttonList[0]} ${operatorValue} ${buttonList[1]} = `}</Text>
+      <Text style={styles.calculation}>{`${buttonList[0]} ${operatorValue} ${buttonList[1]} = `}</Text>
     );
   }
   // 7 x 2 + 
   else if (operatorList.length == 2  && readyToPlace == true && pressedEqual == false) 
   {
     return (
-      <Text style={styles.result}>{`${buttonList[0]} ${operatorList[0]} ${buttonList[1]} ${operatorList[1]}`}</Text>
+      <Text style={styles.calculation}>{`${buttonList[0]} ${operatorList[0]} ${buttonList[1]} ${operatorList[1]}`}</Text>
     );
   }
   // 7 x 2 + 1 
   else if (operatorList.length == 2  && readyToPlace == false && pressedEqual == false) 
   {
     return (
-      <Text style={styles.result}>{`${buttonList[0]} ${operatorList[0]} ${buttonList[1]} ${operatorList[1]} ${answerValue} `}</Text>
+      <Text style={styles.calculation}>{`${buttonList[0]} ${operatorList[0]} ${buttonList[1]} ${operatorList[1]} ${answerValue} `}</Text>
     );
   }
 
@@ -66,14 +66,7 @@ const CalculationComponent =  (props) =>
   else if (operatorList.length == 2  && readyToPlace == true && pressedEqual == true) 
   {
     return (
-      <Text style={styles.result}>{`${buttonList[0]} ${operatorList[0]} ${buttonList[1]} ${operatorList[1]} ${buttonList[2]} = `}</Text>
-    );
-  }
-
-  else if (operatorList.length == 2 && buttonList.length == 3 && readyToPlace == false) 
-  {
-    return (
-      <Text style={styles.result}>{`${buttonList[0]} ${operatorList[0]} ${buttonList[1]} ${operatorList[1]} ${buttonList[2]}`}</Text>
+      <Text style={styles.calculation}>{`${buttonList[0]} ${operatorList[0]} ${buttonList[1]} ${operatorList[1]} ${buttonList[2]} = `}</Text>
     );
   }
   
@@ -231,8 +224,8 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
       <View style={styles.container}>
-        <ResultComponent memoryValue={memoryValue} operatorValue={operatorValue} answerValue={answerValue} operatorList={operatorList} buttonList = {buttonList} readyToPlace={readyToPlace} pressedEqual={pressedEqual} />
         <CalculationComponent memoryValue={memoryValue} operatorValue={operatorValue} answerValue={answerValue} operatorList={operatorList} buttonList = {buttonList} readyToPlace={readyToPlace} pressedEqual={pressedEqual}/>
+        <ResultComponent memoryValue={memoryValue} operatorValue={operatorValue} answerValue={answerValue} operatorList={operatorList} buttonList = {buttonList} readyToPlace={readyToPlace} pressedEqual={pressedEqual} />
 
         <View style={styles.row}>
           <TouchableOpacity onPress={()=>buttonPressed(('C'))} style={[styles.button, styles.toprow]}>
@@ -323,6 +316,12 @@ const styles = StyleSheet.create({
   {    
     color: 'white', 
     fontSize: 50,
+    textAlign: 'right', // Align horizontally, 
+  },
+  calculation: 
+  {    
+    color: 'lightgray', 
+    fontSize: 40,
     textAlign: 'right', // Align horizontally, 
   },
   row: 
