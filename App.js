@@ -3,6 +3,81 @@ import { StyleSheet, Text, View, Dimensions, SafeAreaView, TouchableOpacity } fr
 import React, { useState, useEffect } from 'react';
 const screenWidth = Dimensions.get('window').width;
 
+const ResultComponent =  (props) => 
+{ 
+  const {answerValue, operatorValue, memoryValue, operatorList, readyToPlace, buttonList, pressedEqual} = props;
+  if (pressedEqual) 
+  {
+    return (
+      <Text style={styles.result}> {answerValue} </Text>
+    );
+  }  
+
+}
+
+const CalculationComponent =  (props) => 
+{ 
+
+  const {answerValue, operatorValue, memoryValue, operatorList, readyToPlace, buttonList, pressedEqual} = props;
+  // 7
+  if (operatorList.length == 0 && readyToPlace == false  && pressedEqual == false)
+  {
+    return (
+      <Text style={styles.result}>{`${answerValue}`}</Text>
+    );
+  }
+  // 7 x
+  else if (operatorList.length == 1 &&  readyToPlace == true && pressedEqual == false) 
+  {
+    return (
+      <Text style={styles.result}>{`${answerValue} ${operatorValue}`}</Text>
+    );
+  }
+  // 7 x 2
+  else if (operatorList.length == 1  && readyToPlace == false && pressedEqual == false) 
+  {
+    return (
+      <Text style={styles.result}>{`${memoryValue} ${operatorValue} ${answerValue}`}</Text>
+    );
+  }
+  // 7 x 2 = 
+  else if (operatorList.length == 1  && readyToPlace == true && pressedEqual == true) 
+  {
+    return (
+      <Text style={styles.result}>{`${buttonList[0]} ${operatorValue} ${buttonList[1]} = `}</Text>
+    );
+  }
+  // 7 x 2 + 
+  else if (operatorList.length == 2  && readyToPlace == true && pressedEqual == false) 
+  {
+    return (
+      <Text style={styles.result}>{`${buttonList[0]} ${operatorList[0]} ${buttonList[1]} ${operatorList[1]}`}</Text>
+    );
+  }
+  // 7 x 2 + 1 
+  else if (operatorList.length == 2  && readyToPlace == false && pressedEqual == false) 
+  {
+    return (
+      <Text style={styles.result}>{`${buttonList[0]} ${operatorList[0]} ${buttonList[1]} ${operatorList[1]} ${answerValue} `}</Text>
+    );
+  }
+
+  // 7 x 2 + 1 = 
+  else if (operatorList.length == 2  && readyToPlace == true && pressedEqual == true) 
+  {
+    return (
+      <Text style={styles.result}>{`${buttonList[0]} ${operatorList[0]} ${buttonList[1]} ${operatorList[1]} ${buttonList[2]} = `}</Text>
+    );
+  }
+
+  else if (operatorList.length == 2 && buttonList.length == 3 && readyToPlace == false) 
+  {
+    return (
+      <Text style={styles.result}>{`${buttonList[0]} ${operatorList[0]} ${buttonList[1]} ${operatorList[1]} ${buttonList[2]}`}</Text>
+    );
+  }
+  
+}
 
 export default function App() {
 
@@ -11,6 +86,9 @@ export default function App() {
   const [memoryValue, setmemoryValue] = useState(0); // in a*b it is a, ie the first element in an operation
   const [operatorValue, setoperatorValue] = useState(0); // it is x, - ....
   const [operatorList, setOperatorList] = useState([]);
+  const [buttonList, setbuttonList] = useState([]);
+  const [pressedEqual, setpressedEqual] = useState(false); // if true number replaces the old one. If false gets concatenated to the old one.
+
 
   // useEffect trigerred a re-render of the page and printout of the values whenever the values listed are changed
   // using console.log without useEffect does not work because the console.log will print the value before useState is finished changing the vakue of the state variable
@@ -21,7 +99,9 @@ export default function App() {
     console.log(`operatorValue is ${operatorValue}`);
     console.log(`readyToPlace is ${readyToPlace}`);
     console.log(`operatorList is ${operatorList}`);
-  }, [readyToPlace, answerValue, memoryValue, operatorValue]); // This will run when any of the listed variables change.
+    console.log(`buttonList is ${buttonList}`);
+    console.log(`pressedEqual is ${pressedEqual}`);
+  }, [readyToPlace, answerValue, memoryValue, operatorValue, operatorList, buttonList, pressedEqual]); // This will run when any of the listed variables change.
 
 
   const calculateEquals = () => 
@@ -71,8 +151,8 @@ export default function App() {
     if (typeof value == 'number') 
     {
       setAnswerValue(handleNumber(value));
+      // if (readyToPlace && (operatorList.length > 0)) setbuttonList(myArray => myArray.concat(answerValue));
       setreadyToPlace(false);
-
     }
 
     if (value == 'AC') 
@@ -81,31 +161,10 @@ export default function App() {
       setmemoryValue(0);
       setoperatorValue(0);
       setreadyToPlace(true);  
-      setOperatorList([]);    
+      setOperatorList([]);
+      setbuttonList([]);
+      setpressedEqual(false);          
     }
-
-    /*
-    // no operation was started
-    if operatorValue == 0:
-       if len(answerValue) == 1:
-        setAnswerValue(0)
-       if len(answervalue) > 1:
-        let answerValueString = string(answerValue)
-        remove the last element of the string 
-        Update the answer value
-    // one operation was started, but not chained
-    else
-      if readyToplace is true // means that the last clicked button was an operator
-        setMemoryValue(0);
-        setOperatorValue(0);
-        setReadyToPlace(false)
-        operator list: remove the last operator        
-      else // means 7 x 9 ie we pressed a button after the x
-        setReadytoPlace(true)
-        setanswer value to the memory value
-
-        */
-
 
     if (value == 'C') 
     {
@@ -125,6 +184,7 @@ export default function App() {
 
     if (value == '/' || value == 'x' || value == '-' || value == '+') // button value is an operator /, x, -, + 
     {
+      setbuttonList(myArray => myArray.concat(answerValue));
       setreadyToPlace(true);
       setOperatorList(myArray => myArray.concat(value));
       if (operatorValue == 0) 
@@ -144,11 +204,13 @@ export default function App() {
     }
     if (value == '=') 
     {
+      setbuttonList(myArray => myArray.concat(answerValue));
       console.log(` = was pressed`);
       let result = calculateEquals();
       setAnswerValue(result);
       setmemoryValue(0);
       setreadyToPlace(true); 
+      setpressedEqual(true);
     }
 
     if (value == '+/-') 
@@ -169,7 +231,9 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
       <View style={styles.container}>
-        <Text style={styles.result}>{answerValue}</Text>
+        <ResultComponent memoryValue={memoryValue} operatorValue={operatorValue} answerValue={answerValue} operatorList={operatorList} buttonList = {buttonList} readyToPlace={readyToPlace} pressedEqual={pressedEqual} />
+        <CalculationComponent memoryValue={memoryValue} operatorValue={operatorValue} answerValue={answerValue} operatorList={operatorList} buttonList = {buttonList} readyToPlace={readyToPlace} pressedEqual={pressedEqual}/>
+
         <View style={styles.row}>
           <TouchableOpacity onPress={()=>buttonPressed(('C'))} style={[styles.button, styles.toprow]}>
             <Text style={styles.toprowtext}> C </Text>
